@@ -5,13 +5,12 @@ function displayDetails() {
   var dob = document.getElementById("dob").value.trim();
   var acceptedTerms = document.getElementById("acceptedTerms").checked ? "Yes" : "No";
 
-  // Validate email format
+
   if (!validateEmail(email)) {
       alert("Please enter a valid email address.");
       return;
   }
 
-  // Validate age
   if (!validateAge(dob)) {
       alert("Only users between 18 and 55 years old are allowed.");
       return;
@@ -35,7 +34,7 @@ function displayDetails() {
 }
 
 function validateEmail(email) {
-  // Regular expression for a basic email format validation
+  // i found this regex from https://stackoverflow.com/a/46181/6495043
   var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
