@@ -62,7 +62,6 @@ th {
     background-color: #f2f2f2;
 }
 
-/* Responsive Styling */
 @media only screen and (max-width: 600px) {
     form {
         width: 100%;
