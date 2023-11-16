@@ -1,45 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Login Form</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Registration Page</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .mb-4 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 0.875rem;
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .checkbox-container input {
+            margin-right: 8px;
+        }
+
+        .btn-submit {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .entries {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
 </head>
+
 <body>
-
-    <form id="loginForm" onsubmit="displayDetails(); return false;">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-
-        <label for="dob">Dob</label>
-        <input type="date" id="dob" name="dob" required>
-
-        <label for="acceptedTerms">Accepted terms?</label>
-        <input type="checkbox" id="acceptedTerms" name="acceptedTerms" required>
-
-        <button type="submit">Submit</button>
-    </form>
-
-    <table id="displayTable">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Password</th>
-                <th>Dob</th>
-                <th>Accepted terms?</th>
-            </tr>
-        </thead>
-        <tbody id="userDataBody"></tbody>
-    </table>
+    <div class="container">
+        <h2>Register Here</h2>
+        <form id="user-form" class="max-w-md">
+            <div class="mb-4">
+                <label for="name">Name</label>
+                <input type="text" class="input-field" name="name" id="name" placeholder="Enter your Name" required>
+            </div>
+            <div class="mb-4">
+                <label for="email">Email</label>
+                <input type="email" class="input-field" name="email" id="email" placeholder="Enter your Email" required>
+            </div>
+            <div class="mb-4">
+                <label for="password">Password</label>
+                <input type="password" class="input-field" name="password" id="password" placeholder="Enter your Password" required>
+            </div>
+            <div class="mb-4">
+                <label for="dob">Date of Birth</label>
+                <input type="date" class="input-field" name="dob" id="dob" required>
+            </div>
+            <div class="mb-4 checkbox-container">
+                <input type="checkbox" name="terms" id="terms">
+                <label for="terms">Accept terms and conditions</label>
+            </div>
+            <div class="mb-4">
+                <button class="btn-submit" type="submit" id="submit" name="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    <div class="entries">
+        <h2>Entries</h2>
+        <table id="table"></table>
+    </div>
 
     <script src="index.js"></script>
 </body>
+
 </html>

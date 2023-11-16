@@ -1,90 +1,76 @@
-function displayDetails() {
-  var name = document.getElementById("name").value.trim();
-  var email = document.getElementById("email").value.trim();
-  var password = document.getElementById("password").value.trim();
-  var dob = document.getElementById("dob").value.trim();
-  var acceptedTerms = document.getElementById("acceptedTerms").checked ? "Yes" : "No";
+const userForm = document.getElementById('user-form');
+const tableEntries = document.getElementById('table');
+const dobInput = document.getElementById('dob');
+const emailInput = document.getElementById('email');
 
-  if (!validateEmail(email)) {
-      alert("Please enter a valid email address.");
-      return;
-  }
-
-  if (!validateAge(dob)) {
-      alert("Only users between 18 and 55 years old are allowed.");
-      return;
-  }
-
-  var tableBody = document.getElementById("userDataBody");
-  var newRow = tableBody.insertRow(tableBody.rows.length);
-  var cell1 = newRow.insertCell(0);
-  var cell2 = newRow.insertCell(1);
-  var cell3 = newRow.insertCell(2);
-  var cell4 = newRow.insertCell(3);
-  var cell5 = newRow.insertCell(4);
-
-  cell1.textContent = name;
-  cell2.textContent = email;
-  cell3.textContent = password;
-  cell4.textContent = dob;
-  cell5.textContent = acceptedTerms;
-
-  document.getElementById("displayTable").style.display = "table";
-
-  saveEntryToStorage(name, email, password, dob, acceptedTerms);
+const retrieveEntries = () => {
+    const storedEntries = localStorage.getItem('user-entries');
+    return storedEntries ? JSON.parse(storedEntries) : [];
 }
 
-function saveEntryToStorage(name, email, password, dob, acceptedTerms) {
-  var entry = {
-      name: name,
-      email: email,
-      password: password,
-      dob: dob,
-      acceptedTerms: acceptedTerms
-  };
+const displayEntries = () => {
+    const entries = retrieveEntries();
+    const tableContent = entries.map(entry => {
+        const cells = Object.values(entry).map(value => `<td>${value}</td>`).join('');
+        return `<tr>${cells}</tr>`;
+    }).join('');
 
-  var entries = JSON.parse(localStorage.getItem("userEntries")) || [];
-  entries.push(entry);
-  localStorage.setItem("userEntries", JSON.stringify(entries));
+    const table = `<tr><th>Name</th><th>Email</th><th>Password</th><th>Dob</th><th>Accepted terms?</th></tr>${tableContent}`;
+    tableEntries.innerHTML = table;
 }
 
-function validateEmail(email) {
-  // i found this regex on stackoverflow
-  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+const saveUserForm = event => {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const dob = document.getElementById('dob').value;
+    const acceptedTerms = document.getElementById('terms').checked;
+
+    const entry = { name, email, password, dob, acceptedTerms };
+
+    const userEntries = retrieveEntries();
+    userEntries.push(entry);
+    localStorage.setItem('user-entries', JSON.stringify(userEntries));
+
+    displayEntries();
 }
 
-function validateAge(dob) {
-  var today = new Date();
-  var birthDate = new Date(dob);
-  var age = today.getFullYear() - birthDate.getFullYear();
-  var monthDiff = today.getMonth() - birthDate.getMonth();
+const calculateAge = (today, birthDate) => {
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthsDiff = today.getMonth() - birthDate.getMonth();
 
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-  }
+    if (monthsDiff < 0 || (monthsDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
 
-  return age >= 18 && age <= 55;
+    return age;
 }
 
-function loadEntriesFromStorage() {
-  var entries = JSON.parse(localStorage.getItem("userEntries")) || [];
-  var tableBody = document.getElementById("userDataBody");
+dobInput.addEventListener('change', () => {
+    const [year, month, date] = dobInput.value.split('-');
+    const dob = new Date(year, month - 1, date);
+    const today = new Date();
+    const age = calculateAge(today, dob);
 
-  entries.forEach(function (entry) {
-      var newRow = tableBody.insertRow(tableBody.rows.length);
-      var cell1 = newRow.insertCell(0);
-      var cell2 = newRow.insertCell(1);
-      var cell3 = newRow.insertCell(2);
-      var cell4 = newRow.insertCell(3);
-      var cell5 = newRow.insertCell(4);
+    if (age < 18 || age > 55) {
+        dobInput.setCustomValidity('Your age is not between 18 and 55');
+    } else {
+        dobInput.setCustomValidity('');
+    }
+});
 
-      cell1.textContent = entry.name;
-      cell2.textContent = entry.email;
-      cell3.textContent = entry.password;
-      cell4.textContent = entry.dob;
-      cell5.textContent = entry.acceptedTerms;
-  });
+emailInput.addEventListener('input', () => validateEmail(emailInput));
+
+function validateEmail(element) {
+    if (element.validity.typeMismatch) {
+        element.setCustomValidity('The email is not in the right format!');
+        element.reportValidity();
+    } else {
+        element.setCustomValidity('');
+    }
 }
 
-loadEntriesFromStorage();
+userForm.addEventListener('submit', saveUserForm);
+displayEntries();
